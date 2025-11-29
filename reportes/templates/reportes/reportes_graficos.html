@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}<div class="container mt-4">
+    <h2>Reportes</h2>
+
+    <form method="get" class="row g-3 mb-4">
+        {% csrf_token %}
+        <div class="col-md-3">{{ form.madre.label_tag }} {{ form.madre }}</div>
+        <div class="col-md-2">{{ form.tipo_parto.label_tag }} {{ form.tipo_parto }}</div>
+        <div class="col-md-2">{{ form.sexo_rn.label_tag }} {{ form.sexo_rn }}</div>
+        <div class="col-md-2">{{ form.fecha_inicio.label_tag }} {{ form.fecha_inicio }}</div>
+        <div class="col-md-2">{{ form.fecha_fin.label_tag }} {{ form.fecha_fin }}</div>
+        <div class="col-md-1 align-self-end">
+            <button class="btn btn-primary" type="submit">Filtrar</button>
+        </div>
+    </form>
+
+    <a href="{% url 'exportar_excel' %}" class="btn btn-success mb-3">Exportar Excel</a>
+
+    <canvas id="chartRN" width="400" height="200"></canvas></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script><script>const ctx = document.getElementById('chartRN').getContext('2d');const data = {
+    labels: [{% for r in rn_por_sexo %}'{{ r.sexo }}',{% endfor %}],
+    datasets: [{
+        label: 'Recién Nacidos filtrados por sexo',
+        data: [{% for r in rn_por_sexo %}{{ r.total }},{% endfor %}],
+        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+    }]
+};const chartRN = new Chart(ctx, {
+    type: 'bar',
+    data: data
+});</script>
+{% endblock %}
