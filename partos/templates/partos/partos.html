@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Gestión de Partos</h2>
+
+    <!-- Barra de navegación interna de la app -->
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link {% if request.path == '/partos/madre/' %}active{% endif %}"
+                href="{% url 'listado_madre' %}">Madres</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.path == '/partos/parto/' %}active{% endif %}"
+                href="{% url 'listado_parto' %}">Partos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.path == '/partos/rn/' %}active{% endif %}"
+                href="{% url 'listado_rn' %}">Recién Nacidos</a>
+        </li>
+    </ul>
+
+    <!-- Aquí se renderizan los contenidos específicos -->
+    {% block partos_content %}
+    {% endblock %}
+</div>
+{% endblock %}
