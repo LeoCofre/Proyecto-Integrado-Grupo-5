@@ -1,0 +1,103 @@
+{% extends "partos.html" %}
+
+{% block header %}Ingreso Recién Nacido{% endblock %}
+
+{% block body %}
+<h2>Registrar Recién Nacido</h2>
+<h5>Madre: {{ madre.nombre }} (RUT: {{ madre.rut }})</h5>
+<h5>Parto: {{ parto.get_tipo_parto_display }} - {{ parto.fecha_hora }}</h5>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>Apellido Paterno RN:</label>
+        {{ form.apellido_paterno_rn|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>Fecha Nacimiento:</label>
+        {{ form.fecha_nacimiento|as_widget(attrs={'class':'form-control','type':'date'}) }}
+    </div>
+    <div class="form-group">
+        <label>Hora Nacimiento:</label>
+        {{ form.hora_nacimiento|as_widget(attrs={'class':'form-control','type':'time'}) }}
+    </div>
+    <div class="form-group">
+        <label>Peso (g):</label>
+        {{ form.peso|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>Talla (cm):</label>
+        {{ form.talla|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>CC (cm³):</label>
+        {{ form.cc|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>Semanas de Gestación:</label>
+        {{ form.semanas_gestacion|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>Días de Gestación:</label>
+        {{ form.dias_gestacion|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>Sexo:</label>
+        {{ form.sexo|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+
+    <div class="form-check">
+        {{ form.apego }} <label class="form-check-label">Apego</label>
+    </div>
+    <div class="form-check">
+        {{ form.lactancia_antes_60 }} <label class="form-check-label">Lactancia antes 60'</label>
+    </div>
+    <div class="form-check">
+        {{ form.profilaxis_ocular }} <label class="form-check-label">Profilaxis Ocular</label>
+    </div>
+    <div class="form-check">
+        {{ form.vacuna_hepatitis_b }} <label class="form-check-label">Vacuna Hepatitis B</label>
+    </div>
+    <div class="form-check">
+        {{ form.vacuna_bcg }} <label class="form-check-label">Vacuna BCG</label>
+    </div>
+
+    <div class="form-group">
+        <label>Profesional que vacuna VHB:</label>
+        {{ form.profesional_vhb|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+
+    <div class="form-group">
+        <label>APGAR 1':</label>
+        {{ form.apgar_1|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>APGAR 5':</label>
+        {{ form.apgar_5|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+
+    <div class="form-check">
+        {{ form.anomalia_congenita }} <label class="form-check-label">Anomalía Congénita</label>
+    </div>
+    <div class="form-check">
+        {{ form.reanimacion_basica }} <label class="form-check-label">Reanimación Básica</label>
+    </div>
+    <div class="form-check">
+        {{ form.reanimacion_avanzada }} <label class="form-check-label">Reanimación Avanzada</label>
+    </div>
+    <div class="form-check">
+        {{ form.ehi_grado_ii_iii }} <label class="form-check-label">EHI Grado II y III</label>
+    </div>
+
+    <button type="submit" class="btn btn-secondary">Volver</button>
+    <button type="submit" class="btn btn-primary">Guardar Borrador</button>
+
+    {% if request.user.role == 'matrona' %}
+    <button type="submit" class="btn btn-success" id="btnRegistrar">Registrar</button>
+    {% else %}
+    <button type="submit" class="btn btn-secondary" id="btnRegistrar" disabled
+        title="Solo Matrona puede confirmar">Registrar</button>
+    {% endif %}
+</form>
+{% endblock %}

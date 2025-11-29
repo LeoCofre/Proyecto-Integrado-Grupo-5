@@ -1,0 +1,72 @@
+{% extends "partos.html" %}
+
+{% block header %}Ingreso / Edición de Madre{% endblock %}
+
+{% block body %}
+<h2>Registrar Madre</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>Nombre:</label>
+        {{ form.nombre|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>RUT:</label>
+        {{ form.rut|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>Fecha de Nacimiento:</label>
+        {{ form.fecha_nacimiento|as_widget(attrs={'class':'form-control','type':'date'}) }}
+    </div>
+    <div class="form-group">
+        <label>Dirección:</label>
+        {{ form.direccion|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>Teléfono:</label>
+        {{ form.telefono|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>Antecedentes Obstétricos:</label>
+        {{ form.antecedentes_obstetricos|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>Atenciones Clínicas:</label>
+        {{ form.atenciones_clinicas|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>Acompañante:</label>
+        {{ form.acompañante|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+
+    {% if madre %}
+    <button type="button" id="editarBtn" class="btn btn-warning mb-2">Editar</button>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary">Guardar Borrador</button>
+
+    {% if request.user.role == 'matrona' %}
+    <button type="submit" class="btn btn-success" id="btnRegistrar">Registrar</button>
+    {% else %}
+    <button type="submit" class="btn btn-secondary" id="btnRegistrar" disabled
+        title="Solo Matrona puede confirmar">Registrar</button>
+    {% endif %}
+
+    <a href="{% url 'inicio' %}" class="btn btn-secondary">Volver al Inicio</a>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const editarBtn = document.getElementById("editarBtn");
+        if (editarBtn) {
+            const inputs = document.querySelectorAll("input, textarea, select");
+            inputs.forEach(el => el.setAttribute("disabled", "disabled"));
+            editarBtn.addEventListener("click", function () {
+                inputs.forEach(el => el.removeAttribute("disabled"));
+            });
+        }
+    });
+</script>
+{% endblock %}

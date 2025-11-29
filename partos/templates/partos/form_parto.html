@@ -1,0 +1,48 @@
+{% extends "partos.html" %}
+
+{% block header %}Ingreso / Edición de Parto{% endblock %}
+
+{% block body %}
+<h2>Registrar Parto</h2>
+<h5>Madre: {{ madre.nombre }} (RUT: {{ madre.rut }})</h5>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label>Fecha y Hora:</label>
+        {{ form.fecha_hora|as_widget(attrs={'class':'form-control', 'type':'datetime-local'}) }}
+    </div>
+    <div class="form-group">
+        <label>Tipo Parto:</label>
+        {{ form.tipo_parto|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-group">
+        <label>Tipo Parto Clasificado:</label>
+        {{ form.tipo_parto_clasificado|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+    <div class="form-check">
+        {{ form.parto_distocico }} <label class="form-check-label">Parto Distócico</label>
+    </div>
+    <div class="form-check">
+        {{ form.parto_vacuum }} <label class="form-check-label">Parto Vacuum</label>
+    </div>
+    <div class="form-check">
+        {{ form.rem_a24 }} <label class="form-check-label">REM A24</label>
+    </div>
+    <div class="form-group">
+        <label>Complicaciones:</label>
+        {{ form.complicaciones|as_widget(attrs={'class':'form-control'}) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar Borrador</button>
+
+    {% if request.user.role == 'matrona' %}
+    <button type="submit" class="btn btn-success" id="btnRegistrar">Registrar</button>
+    {% else %}
+    <button type="submit" class="btn btn-secondary" id="btnRegistrar" disabled
+        title="Solo Matrona puede confirmar">Registrar</button>
+    {% endif %}
+
+    <a href="{% url 'ingreso_madre' %}" class="btn btn-secondary">Volver</a>
+</form>
+{% endblock %}

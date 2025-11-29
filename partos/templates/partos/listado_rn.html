@@ -1,0 +1,86 @@
+{% extends "partos.html" %}
+
+{% block header %}Listado de Recién Nacidos{% endblock %}
+
+{% block body %}
+<h2>Listado de Recién Nacidos</h2>
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Madre</th>
+            <th>Parto Asociado</th>
+            <th>Fecha Nacimiento</th>
+            <th>Hora Nacimiento</th>
+            <th>Apellido Paterno RN</th>
+            <th>Comuna</th>
+            <th>CESFAM</th>
+            <th>Fecha Nacimiento Madre</th>
+            <th>Tipo Parto</th>
+            <th>Tipo Parto Clasificado</th>
+            <th>Peso</th>
+            <th>Talla</th>
+            <th>CC</th>
+            <th>Semanas Gestación</th>
+            <th>Días Gestación</th>
+            <th>Sexo</th>
+            <th>Apego</th>
+            <th>Lactancia < 60'</th>
+            <th>Profilaxis Ocular</th>
+            <th>Vacuna Hepatitis B</th>
+            <th>Vacuna BCG</th>
+            <th>Profesional VHB</th>
+            <th>APGAR 1'</th>
+            <th>APGAR 5'</th>
+            <th>Anomalía Congénita</th>
+            <th>Reanimación Básica</th>
+            <th>Reanimación Avanzada</th>
+            <th>EHI Grado II y III</th>
+            <th>Confirmado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rn in rns %}
+        <tr>
+            <td>{{ rn.id }}</td>
+            <td>{{ rn.madre.nombre }}</td>
+            <td>{{ rn.parto_asociado.id }}</td>
+            <td>{{ rn.fecha_nacimiento }}</td>
+            <td>{{ rn.hora_nacimiento }}</td>
+            <td>{{ rn.apellido_paterno_rn }}</td>
+            <td>{{ rn.comuna }}</td>
+            <td>{{ rn.cesfam }}</td>
+            <td>{{ rn.fecha_nacimiento_madre }}</td>
+            <td>{{ rn.tipo_parto }}</td>
+            <td>{{ rn.tipo_parto_clasificado }}</td>
+            <td>{{ rn.peso }}</td>
+            <td>{{ rn.talla }}</td>
+            <td>{{ rn.cc }}</td>
+            <td>{{ rn.semanas_gestacion }}</td>
+            <td>{{ rn.dias_gestacion }}</td>
+            <td>{{ rn.sexo }}</td>
+            <td>{{ rn.apego }}</td>
+            <td>{{ rn.lactancia_antes_60 }}</td>
+            <td>{{ rn.profilaxis_ocular }}</td>
+            <td>{{ rn.vacuna_hepatitis_b }}</td>
+            <td>{{ rn.vacuna_bcg }}</td>
+            <td>{{ rn.profesional_vhb }}</td>
+            <td>{{ rn.apgar_1 }}</td>
+            <td>{{ rn.apgar_5 }}</td>
+            <td>{{ rn.anomalia_congenita }}</td>
+            <td>{{ rn.reanimacion_basica }}</td>
+            <td>{{ rn.reanimacion_avanzada }}</td>
+            <td>{{ rn.ehi_grado_ii_iii }}</td>
+            <td>{{ rn.confirmado }}</td>
+            <td>
+                <a href="{% url 'editar_rn' rn.id %}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="{% url 'detalle_rn' rn.id %}" class="btn btn-sm btn-info">Ver</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'crear_rn' %}" class="btn btn-success mt-3">Agregar Recién Nacido</a>
+{% endblock %}
