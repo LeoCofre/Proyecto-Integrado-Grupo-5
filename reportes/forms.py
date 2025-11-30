@@ -1,4 +1,6 @@
-from django import formsfrom partos.models import Madre, Parto, RecienNacido
+from django import formsfrom partos.models 
+import Madre, Parto, RecienNacido
+
 class FiltroReporteForm(forms.Form):
     madre = forms.ModelChoiceField(
         queryset=Madre.objects.all(), required=False, label="Madre"    )
