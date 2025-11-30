@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Neonatal{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5 text-center">
+        <h1 class="display-5 fw-bold">Bienvenido al Sistema Neonatal</h1>
+        <p class="col-md-8 fs-4 mx-auto">Administra partos, madres y recién nacidos. Usa el botón para acceder al panel
+            de login.</p>
+        <div class="d-flex justify-content-center mt-4">
+            <a class="btn btn-primary btn-lg" href="/login/" role="button">Ir a Login</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h4>Partos</h4>
+        <p>Registrar y revisar partos y datos asociados.</p>
+    </div>
+    <div class="col-md-4">
+        <h4>Reportes</h4>
+        <p>Visualizar estadísticas y exportar datos.</p>
+    </div>
+    <div class="col-md-4">
+        <h4>Auditoría</h4>
+        <p>Revisar actividad y registros de la aplicación.</p>
+    </div>
+</div>
+{% endblock %}

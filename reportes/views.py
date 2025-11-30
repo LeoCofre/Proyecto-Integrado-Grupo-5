@@ -81,8 +81,8 @@ def exportar_excel(request):
             rn.talla,
             rn.cc,
             rn.get_sexo_display(),
-            rn.apgar_minuto_uno,
-            rn.apgar_minuto_cinco
+            rn.apgar_1,
+            rn.apgar_5
         ])
 
     wb.save(response)   
