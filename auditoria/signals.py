@@ -7,6 +7,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+#signals.py sirve para registrar eventos en el modelo Auditoria
+# cuando ocurren ciertas acciones en otros modelos o eventos de autenticación.
+
 # ==============================================================================
 # 1. IMPORTACIÓN DE MODELOS
 # ==============================================================================
