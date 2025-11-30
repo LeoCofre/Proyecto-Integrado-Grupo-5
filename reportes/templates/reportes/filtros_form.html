@@ -1,0 +1,38 @@
+{% comment %}Partial: filter form for reportes.reportes_graficos view{% endcomment %}
+<form method="get" class="row g-3 mb-4" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="col-12">
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    </div>
+    {% endif %}
+
+    <div class="col-md-3">
+        <label for="id_madre" class="form-label">{{ form.madre.label }}</label>
+        {{ form.madre.as_widget(attrs={'class': 'form-select'}) }}
+    </div>
+
+    <div class="col-md-2">
+        <label for="id_tipo_parto" class="form-label">{{ form.tipo_parto.label }}</label>
+        {{ form.tipo_parto.as_widget(attrs={'class': 'form-select'}) }}
+    </div>
+
+    <div class="col-md-2">
+        <label for="id_sexo_rn" class="form-label">{{ form.sexo_rn.label }}</label>
+        {{ form.sexo_rn.as_widget(attrs={'class': 'form-select'}) }}
+    </div>
+
+    <div class="col-md-2">
+        <label for="id_fecha_inicio" class="form-label">{{ form.fecha_inicio.label }}</label>
+        {{ form.fecha_inicio.as_widget(attrs={'class': 'form-control'}) }}
+    </div>
+
+    <div class="col-md-2">
+        <label for="id_fecha_fin" class="form-label">{{ form.fecha_fin.label }}</label>
+        {{ form.fecha_fin.as_widget(attrs={'class': 'form-control'}) }}
+    </div>
+
+    <div class="col-md-1 align-self-end">
+        <button class="btn btn-primary w-100" type="submit">Filtrar</button>
+    </div>
+</form>
