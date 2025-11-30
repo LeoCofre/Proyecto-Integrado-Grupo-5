@@ -14,3 +14,6 @@ class FiltroReporteForm(forms.Form):
         label="Sexo RN"    )
     fecha_inicio = forms.DateField(required=False, widget=forms.DateInput(attrs={'type':'date'}))
     fecha_fin = forms.DateField(required=False, widget=forms.DateInput(attrs={'type':'date'}))
+
+
+    
