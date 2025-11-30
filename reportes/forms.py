@@ -1,4 +1,6 @@
-from django import formsfrom partos.models import Madre, Parto, RecienNacido
+from django import forms 
+from partos.models import Madre, Parto, RecienNacido
+
 class FiltroReporteForm(forms.Form):
     madre = forms.ModelChoiceField(
         queryset=Madre.objects.all(), required=False, label="Madre"    )
@@ -12,3 +14,6 @@ class FiltroReporteForm(forms.Form):
         label="Sexo RN"    )
     fecha_inicio = forms.DateField(required=False, widget=forms.DateInput(attrs={'type':'date'}))
     fecha_fin = forms.DateField(required=False, widget=forms.DateInput(attrs={'type':'date'}))
+
+
+    

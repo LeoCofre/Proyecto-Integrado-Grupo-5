@@ -1,26 +1,35 @@
+from datetime import datetime
 from django.shortcuts import render 
 from django.db.models import Count 
 from partos.models import Madre, Parto, RecienNacido 
-from.forms import FiltroReporte, Form 
+from.forms import FiltroReporteForm 
 from django.http import HttpResponse 
-import csvimport datetime
+import csv 
+import datetime
 import io 
 from openpyxl import Workbook
-# Dashboard general def dashboard(request):
+
+    # Dashboard general 
+def dashboard(request):
     total_madres = Madre.objects.count()
     total_partos = Parto.objects.count()
     total_rn = RecienNacido.objects.count()
 
-    # Ejemplo de datos para gráfico: RN por sexo    rn_por_sexo = RecienNacido.objects.values('sexo').annotate(total=Count('id'))
+        # Ejemplo de datos para gráfico: RN por sexo    
+    rn_por_sexo = RecienNacido.objects.values('sexo').annotate(total=Count('id'))
 
     context = {
         'total_madres': total_madres,
         'total_partos': total_partos,
         'total_rn': total_rn,
         'rn_por_sexo': rn_por_sexo,
-    }
+        }
     return render(request, 'reportes/dashboard.html', context)
-# Reporte con filtros def reportes_graficos(request):
+
+
+
+    # Reporte con filtros 
+def reportes_graficos(request):
     form = FiltroReporteForm(request.GET or None)
     rns = RecienNacido.objects.all()
 
@@ -42,7 +51,8 @@ from openpyxl import Workbook
         if fecha_fin:
             rns = rns.filter(parto_asociado__fecha_hora__date__lte=fecha_fin)
 
-    # Datos agregados para gráficos    rn_por_sexo = rns.values('sexo').annotate(total=Count('id'))
+    # Datos agregados para gráficos  
+    rn_por_sexo = rns.values('sexo').annotate(total=Count('id'))
 
     context = {
         'form': form,
@@ -50,7 +60,8 @@ from openpyxl import Workbook
         'rn_por_sexo': rn_por_sexo,
     }
     return render(request, 'reportes/reportes_graficos.html', context)
-# Exportar Excel def exportar_excel(request):
+# Exportar Excel 
+def exportar_excel(request):
     rns = RecienNacido.objects.all()
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename=Reporte_RN_{datetime.date.today()}.xlsx'
