@@ -3,6 +3,8 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out, user_lo
 from django.dispatch import receiver
 from .models import Auditoria
 from django.conf import settings
+from django.apps import apps
+from django.contrib.auth import get_user_model
 import logging
 
 logger = logging.getLogger(__name__)
@@ -16,10 +18,11 @@ logger = logging.getLogger(__name__)
 # Intentamos obtener los modelos Parto, RecienNacido y Usuario.
 # Si no existen, usamos una clase temporal para evitar que el servidor se caiga.
 try:
-    #  HAY QUE CAMBIARLO YA QUE asume que 'registros' es la app donde están Parto y RecienNacido
-    Parto = settings.AUTH_USER_MODEL.model._meta.apps.get_model('registros', 'Parto')
-    RecienNacido = settings.AUTH_USER_MODEL.model._meta.apps.get_model('registros', 'RecienNacido')
-    Usuario = settings.AUTH_USER_MODEL.model
+    # Obtener modelos clínicos desde la app correcta 'partos'
+    Parto = apps.get_model('partos', 'Parto')
+    RecienNacido = apps.get_model('partos', 'RecienNacido')
+    # Obtener el modelo de usuario configurado en AUTH_USER_MODEL
+    Usuario = get_user_model()
 except LookupError:
     logger.warning("Modelos clínicos no encontrados. La auditoría clínica estará deshabilitada.")
     class Parto: pass
@@ -100,12 +103,15 @@ def log_logout(sender, request, user, **kwargs):
 @receiver(user_login_failed)
 def log_login_failed(sender, credentials, request, **kwargs):
     """Registra Intento de Inicio de Sesión Fallido (LOGIN_FAILED) y la IP."""
-    username_tried = credentials.get(settings.AUTH_USER_MODEL.USERNAME_FIELD, 'Desconocido')
+    # Obtener el nombre del campo username desde el modelo de usuario
+    user_model = Usuario
+    username_field = getattr(user_model, 'USERNAME_FIELD', 'username')
+    username_tried = credentials.get(username_field, 'Desconocido')
     ip_address = request.META.get('REMOTE_ADDR')
-    
+
     # El usuario será None si el login falla.
     Auditoria.objects.create(
-        usuario=None, 
+        usuario=None,
         accion_realizada='LOGIN_FAILED',
         modelo_afectado='Sistema',
         registro_id=None,
