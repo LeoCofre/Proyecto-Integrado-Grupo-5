@@ -84,6 +84,8 @@ class Usuario(models.Model):
         unique=True, 
         verbose_name="RUT (Identificador Único)"
     )
+
+
     
     # Autenticación (Tu lógica manual)
     password = models.CharField(
