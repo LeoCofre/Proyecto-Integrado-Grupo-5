@@ -153,6 +153,12 @@ def login_view(request):
                         return redirect('panel_supervisor')
                     elif rol_actual == 'Administrador TI':
                         return redirect('crear_usuario')
+                    elif rol_actual == 'Auditor Interno':
+                        return redirect('panel_auditor')
+                    elif rol_actual == 'Enfermero':
+                        return redirect('panel_enfermero')
+                    elif rol_actual == 'SOME':
+                        return redirect('panel_some')
                     else:
                         return redirect('home')
                 else:
@@ -169,3 +175,7 @@ def logout_view(request):
     logout(request)
     messages.info(request, "Has cerrado sesión correctamente.")
     return redirect('login')
+
+@login_required
+def panel_matrona(request):
+    return render(request, 'login/panel_matrona.html')
