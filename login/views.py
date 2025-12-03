@@ -153,6 +153,12 @@ def login_view(request):
                         return redirect('panel_supervisor')
                     elif rol_actual == 'Administrador TI':
                         return redirect('crear_usuario')
+                    elif rol_actual == 'Auditor Interno':
+                        return redirect('panel_auditor')
+                    elif rol_actual == 'Enfermero':
+                        return redirect('panel_enfermero')
+                    elif rol_actual == 'SOME':
+                        return redirect('panel_some')
                     else:
                         return redirect('home')
                 else:
