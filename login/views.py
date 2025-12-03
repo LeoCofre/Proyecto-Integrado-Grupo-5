@@ -175,3 +175,7 @@ def logout_view(request):
     logout(request)
     messages.info(request, "Has cerrado sesión correctamente.")
     return redirect('login')
+
+@login_required
+def panel_matrona(request):
+    return render(request, 'login/panel_matrona.html')
