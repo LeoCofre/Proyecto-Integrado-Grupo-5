@@ -49,7 +49,7 @@ class Auditoria(models.Model):
         max_length=100, 
         blank=True, 
         null=True, 
-        verbose_name="Modelo Afectado (Ej: 'Parto', 'Usuario')"
+        verbose_name="Modelo Afectado (Ej: 'Parto', 'Madre')"
     )
     
     registro_id = models.IntegerField(

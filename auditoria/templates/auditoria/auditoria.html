@@ -1,100 +1,110 @@
 {% extends 'base.html' %}
-{% block title %} Auditoría {% endblock %}
+{% block title %} 🛡️ Registros de Auditoría {% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">🔍 Pista de Auditoría </h2>
-    <p class="text-muted">Visualización de eventos de seguridad y cambios en registros clínicos.</p>
+    <h1 class="mb-4">Registro de Trazabilidad y Auditoría</h1>
+    <p class="text-muted">Eventos ordenados por fecha y hora de forma descendente (más recientes primero).</p>
 
     <div class="table-responsive">
-        <table class="table table-striped table-hover table-sm"> <!-- Agregado table-sm para filas más compactas-->
-            <thead>
+        <table class="table table-striped table-hover table-sm">
+            
+            <thead class="table-dark">
                 <tr>
+                    <th scope="col">#</th>
                     <th scope="col">Fecha y Hora</th>
-                    <th scope="col">Acción Realizada</th>
-                    <th scope="col">RUT del Usuario</th>
-                    <th scope="col">Perfil</th>
+                    <th scope="col">Tipo de Evento</th>
+                    <th scope="col">Usuario Involucrado</th>
                     <th scope="col">Modelo Afectado</th>
                     <th scope="col">ID Registro</th>
-                    <th scope="col">Detalle del Cambio</th>
-                    <th scope="col">IP Origen</th>
+                    <th scope="col">Dirección IP</th>
+                    <th scope="col">Detalles del Cambio</th>
                 </tr>
             </thead>
+            
             <tbody>
-                {% for log in logs %}
+                {% for registro in registros_auditoria %}
                 <tr>
-                    <td>{{ log.fecha_hora|date:"Y-m-d H:i:s" }}</td> <!-- formato de fecha y hora -->
-                    
+                    <th scope="row">{{ forloop.counter }}</th>
+
+                    <td>{{ registro.fecha_hora|date:"Y-m-d H:i:s" }}</td>
+
                     <td>
-                        <span class="badge 
-                            {% if 'CREATE' in log.accion_realizada %}bg-success
-                            {% elif 'UPDATE' in log.accion_realizada %}bg-warning text-dark
-                            {% elif 'DELETE' in log.accion_realizada %}bg-danger
-                            {% elif 'LOGIN_FAILED' in log.accion_realizada or 'ACCESS_DENIED' in log.accion_realizada %}bg-dark
-                            {% else %}bg-info text-dark
-                            {% endif %}">
-                            {{ log.get_accion_realizada_display }}
-                        </span>
+                        <strong>{{ registro.get_accion_realizada_display }}</strong>
                     </td>
-                    
+
                     <td>
-                        {% if log.usuario %}
-                            <strong>{{ log.usuario.nombre }}</strong> <br>({{ log.usuario.rut }})
+                        {% if registro.usuario %}
+                            {{ registro.usuario.username|default:registro.usuario }} 
                         {% else %}
-                            Sistema / Anónimo
+                            <span class="text-danger">Sistema / Desconocido</span>
                         {% endif %}
                     </td>
+
                     <td>
-                         {% if log.usuario and log.usuario.rol %}
-                            {{ log.usuario.rol.nombre }}
+                        {% if registro.modelo_afectado %}
+                            {{ registro.modelo_afectado }}
                         {% else %}
-                            N/A
+                            <span class="text-secondary">N/A</span>
                         {% endif %}
                     </td>
-                    
-                    <td>{{ log.modelo_afectado|default:"N/A" }}</td>
-                    
-                    <td>{{ log.registro_id|default:"-" }}</td>
-                    
+
                     <td>
-                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetalle{{ log.id }}" aria-expanded="false" aria-controls="collapseDetalle{{ log.id }}">
+                        {% if registro.registro_id %}
+                            {{ registro.registro_id }}
+                        {% else %}
+                            <span class="text-secondary">N/A</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if registro.ip_address %}
+                            {{ registro.ip_address }}
+                        {% else %}
+                            <span class="text-secondary">N/A</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#detalleModal-{{ registro.pk }}">
                             Ver Detalles
                         </button>
-                        <div class="collapse" id="collapseDetalle{{ log.id }}">
-                            <div class="card card-body mt-2">
-                                <pre>{{ log.detalles_cambio|default:"No hay detalles adicionales." }}</pre>
-                            </div>
-                        </div>
                     </td>
-                    
-                    <td>{{ log.ip_address|default:"No registrado" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted">
+                        No hay registros de auditoría disponibles.
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
-{% endblock %}
 
-<!-- 
-Comentarios adicionales:
-1. Se ha añadido la clase "table-sm" a la tabla para hacer las filas más compactas.
-2. Se ha mejorado la visualización de la acción realizada utilizando badges con colores específicos para cada tipo de acción.
+{% for registro in registros_auditoria %}
+<div class="modal fade" id="detalleModal-{{ registro.pk }}" tabindex="-1" aria-labelledby="detalleModalLabel-{{ registro.pk }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleModalLabel-{{ registro.pk }}">Detalle del Evento #{{ registro.pk }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Evento:</strong> {{ registro.get_accion_realizada_display }}</p>
+                <p><strong>Fecha/Hora:</strong> {{ registro.fecha_hora|date:"Y-m-d H:i:s" }}</p>
+                <p><strong>Modelo/ID:</strong> {{ registro.modelo_afectado|default:'N/A' }} / {{ registro.registro_id|default:'N/A' }}</p>
+                <hr>
+                <h6>Detalles:</h6>
+                <pre class="bg-light p-3 border rounded">{{ registro.detalles_cambio|default:'Sin detalles adicionales.' }}</pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 
-Referencia a Modelos:
-- Usuario: Se accede al nombre y al RUT usando log.usuario.nombre y log.usuario.rut.
-- Rol: Se obtiene el nombre del rol a través de la relación: log.usuario.rol.nombre.
-
-Visualización de Acciones:
-- Se utiliza {{ log.get_accion_realizada_display }}:
-    Es una funciónde Django para mostrar la etiqueta legible del choice (Ej: en lugar de CREATE, muestra "Creación de Registro").
-- Se añadieron badges de color (bg-success, bg-danger, etc.) para clasificar visualmente los tipos de eventos:
-    (creación vs. eliminación vs. fallos de seguridad), haciendo más fácil la revisión para el Auditor.
-
-Otros detalles:
-- El campo log.detalles_cambio se oculta inicialmente y se usa un componente collapse de Bootstrap para mostrar el contenido (ej: JSON) solo si se necesita. Esto mantiene la tabla limpia.
-- Se usa la etiqueta <pre> dentro del colapso para preservar el formato si el detalle es JSON o texto multi-línea.
-
-Auditor Interno y el Jefe de Área tienen una herramienta poderosa para cumplir con los requisitos de la pista de auditoría con este template.
-
--->
+{% endblock content %}
