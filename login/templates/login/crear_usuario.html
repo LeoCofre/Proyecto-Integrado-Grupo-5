@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Usuario</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .contenedor {
+            max-width: 450px;
+            margin: 60px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccd1d1;
+            border-radius: 6px;
+            background: #f8f9fa;
+            margin-top: 5px;
+        }
+
+        button {
+            width: 100%;
+            background: #3498db;
+            padding: 12px;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 6px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .volver {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #5d6d7e;
+        }
+
+        .msg {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .msg.success {
+            background: #d4efdf;
+            color: #1e8449;
+            border: 1px solid #1e8449;
+        }
+
+        .msg.error {
+            background: #f5b7b1;
+            color: #a93226;
+            border: 1px solid #a93226;
+        }
+
+        .campo {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contenedor">
+        <h2>Crear Usuario (Admin TI)</h2>
+
+        <!-- Mensajes de Django -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="msg {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="campo">
+                <label>Nombre Completo</label>
+                {{ form.nombre }}
+            </div>
+
+            <div class="campo">
+                <label>RUT</label>
+                {{ form.rut }}
+            </div>
+
+            <div class="campo">
+                <label>Rol</label>
+                {{ form.rol }}
+            </div>
+
+            <div class="campo">
+                <label>Contraseña</label>
+                {{ form.password }}
+            </div>
+
+            <div class="campo">
+                <label>Confirmar Contraseña</label>
+                {{ form.confirmar_password }}
+            </div>
+            <button type="submit">Guardar Usuario</button>
+        </form>
+
+        <a class="volver" href="/login">← Volver al Inicio</a>
+    </div>
+
+</body>
+</html>

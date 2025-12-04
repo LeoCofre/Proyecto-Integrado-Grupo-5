@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
-{% block content %}<div class="container mt-4">
+{% block content %}
+<div class="container mt-4">
     <h2>Dashboard Administrativo</h2>
 
     <div class="row">
@@ -30,20 +31,22 @@
         </div>
     </div>
 
-    <canvas id="sexoRNChart" width="400" height="200"></canvas></div>
+    <canvas id="sexoRNChart" width="400" height="200"></canvas>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>const ctx = document.getElementById('sexoRNChart').getContext('2d');
-        const data = {
-            labels: [{% for r in rn_por_sexo %}'{{ r.sexo }}',{% endfor %}],
-            datasets: [{
-                label: 'Recién Nacidos por Sexo',
-                data: [{% for r in rn_por_sexo %}{{ r.total }},{% endfor %}],
-                backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
-                }]
-            };
-        const sexoRNChart = new Chart(ctx, {
-                type: 'bar',
-                data: data
+<script>
+    const ctx = document.getElementById('sexoRNChart').getContext('2d');
+    const data = {
+        labels: [{% for r in rn_por_sexo %}{% if not forloop.first %}, {% endif %} '{{ r.sexo }}'{% endfor %}],
+    datasets: [{
+        label: 'Recién Nacidos por Sexo',
+        data: [{% for r in rn_por_sexo %}{% if not forloop.first %}, {% endif %} { { r.total } } {% endfor %}],
+    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+        }]
+    };
+    const sexoRNChart = new Chart(ctx, {
+        type: 'bar',
+        data: data
     });
 </script>
 {% endblock %}

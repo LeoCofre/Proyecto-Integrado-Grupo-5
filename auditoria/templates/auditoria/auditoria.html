@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %} Auditoría {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">🔍 Pista de Auditoría </h2>
+    <p class="text-muted">Visualización de eventos de seguridad y cambios en registros clínicos.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-sm"> <!-- Agregado table-sm para filas más compactas-->
+            <thead>
+                <tr>
+                    <th scope="col">Fecha y Hora</th>
+                    <th scope="col">Acción Realizada</th>
+                    <th scope="col">RUT del Usuario</th>
+                    <th scope="col">Perfil</th>
+                    <th scope="col">Modelo Afectado</th>
+                    <th scope="col">ID Registro</th>
+                    <th scope="col">Detalle del Cambio</th>
+                    <th scope="col">IP Origen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.fecha_hora|date:"Y-m-d H:i:s" }}</td> <!-- formato de fecha y hora -->
+                    
+                    <td>
+                        <span class="badge 
+                            {% if 'CREATE' in log.accion_realizada %}bg-success
+                            {% elif 'UPDATE' in log.accion_realizada %}bg-warning text-dark
+                            {% elif 'DELETE' in log.accion_realizada %}bg-danger
+                            {% elif 'LOGIN_FAILED' in log.accion_realizada or 'ACCESS_DENIED' in log.accion_realizada %}bg-dark
+                            {% else %}bg-info text-dark
+                            {% endif %}">
+                            {{ log.get_accion_realizada_display }}
+                        </span>
+                    </td>
+                    
+                    <td>
+                        {% if log.usuario %}
+                            <strong>{{ log.usuario.nombre }}</strong> <br>({{ log.usuario.rut }})
+                        {% else %}
+                            Sistema / Anónimo
+                        {% endif %}
+                    </td>
+                    <td>
+                         {% if log.usuario and log.usuario.rol %}
+                            {{ log.usuario.rol.nombre }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    
+                    <td>{{ log.modelo_afectado|default:"N/A" }}</td>
+                    
+                    <td>{{ log.registro_id|default:"-" }}</td>
+                    
+                    <td>
+                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetalle{{ log.id }}" aria-expanded="false" aria-controls="collapseDetalle{{ log.id }}">
+                            Ver Detalles
+                        </button>
+                        <div class="collapse" id="collapseDetalle{{ log.id }}">
+                            <div class="card card-body mt-2">
+                                <pre>{{ log.detalles_cambio|default:"No hay detalles adicionales." }}</pre>
+                            </div>
+                        </div>
+                    </td>
+                    
+                    <td>{{ log.ip_address|default:"No registrado" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+<!-- 
+Comentarios adicionales:
+1. Se ha añadido la clase "table-sm" a la tabla para hacer las filas más compactas.
+2. Se ha mejorado la visualización de la acción realizada utilizando badges con colores específicos para cada tipo de acción.
+
+Referencia a Modelos:
+- Usuario: Se accede al nombre y al RUT usando log.usuario.nombre y log.usuario.rut.
+- Rol: Se obtiene el nombre del rol a través de la relación: log.usuario.rol.nombre.
+
+Visualización de Acciones:
+- Se utiliza {{ log.get_accion_realizada_display }}:
+    Es una funciónde Django para mostrar la etiqueta legible del choice (Ej: en lugar de CREATE, muestra "Creación de Registro").
+- Se añadieron badges de color (bg-success, bg-danger, etc.) para clasificar visualmente los tipos de eventos:
+    (creación vs. eliminación vs. fallos de seguridad), haciendo más fácil la revisión para el Auditor.
+
+Otros detalles:
+- El campo log.detalles_cambio se oculta inicialmente y se usa un componente collapse de Bootstrap para mostrar el contenido (ej: JSON) solo si se necesita. Esto mantiene la tabla limpia.
+- Se usa la etiqueta <pre> dentro del colapso para preservar el formato si el detalle es JSON o texto multi-línea.
+
+Auditor Interno y el Jefe de Área tienen una herramienta poderosa para cumplir con los requisitos de la pista de auditoría con este template.
+
+-->

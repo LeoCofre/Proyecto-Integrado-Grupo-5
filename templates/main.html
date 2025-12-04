@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Gestión de Partos y Recién Nacidos{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5 text-center">
+        <h1 class="display-5 fw-bold">Bienvenido al Sistema Neonatal</h1>
+        <h3 class="mb-4">Hospital Herminda Martin de Chillán</h3>
+        <p class="col-md-8 fs-4 mx-auto">Administración de partos, madres y recién nacidos.</p>
+        <p class="col-md-8 fs-4 mx-auto">Para utilizar la aplicación, debe de iniciar sesión.</p>
+        <div class="d-flex justify-content-center mt-4">
+            <a class="btn btn-primary btn-lg" href="/login/" role="button">Iniciar Sesión</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
