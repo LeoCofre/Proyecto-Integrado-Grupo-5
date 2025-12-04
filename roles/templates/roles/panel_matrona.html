@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Partos - Sistema Neonatal{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Panel Matrona</h1>
+    <p class="lead">Seleccione una opción:</p>
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Ingresar nuevo parto</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Registrar un nuevo parto iniciando por el RUT de la madre.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'ingreso_madre' %}" class="btn btn-primary">Ingresar Parto</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Ver partos ingresados</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Consultar y revisar la lista de partos registrados.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'listado_partos' %}" class="btn btn-success">Ver Listado de Partos</a>
+                        <a href="{% url 'listado_partos' %}?borradores=1" class="btn btn-warning">Ver Borradores</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <footer class="text-muted border-top pt-3">
+                <p><small>Sistema Neonatal - Gestión de Partos</small></p>
+            </footer>
+        </div>
+    </div>
+</div>
+{% endblock %}

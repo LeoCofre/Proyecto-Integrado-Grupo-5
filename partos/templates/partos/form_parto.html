@@ -1,48 +1,46 @@
-{% extends "partos.html" %}
-
+{% extends 'partos/partos.html' %}
 {% block header %}Ingreso / Edición de Parto{% endblock %}
-
 {% block body %}
-<h2>Registrar Parto</h2>
-<h5>Madre: {{ madre.nombre }} (RUT: {{ madre.rut }})</h5>
-
-<form method="post">
+<h5 class="mb-3">Madre: <span class="fw-bold">{{ madre.nombre }}</span> (RUT: <span class="fw-bold">{{ madre.rut
+        }}</span>)<br>Fecha Nacimiento: <span class="fw-bold">{{ madre.fecha_nacimiento }}</span></h5>
+<form method="post" class="row g-3">
     {% csrf_token %}
-    <div class="form-group">
-        <label>Fecha y Hora:</label>
-        {{ form.fecha_hora|as_widget(attrs={'class':'form-control', 'type':'datetime-local'}) }}
+    <div class="col-md-6">
+        <label for="id_fecha_hora" class="form-label">Fecha y Hora</label>
+        {{ form.fecha_hora }}
     </div>
-    <div class="form-group">
-        <label>Tipo Parto:</label>
-        {{ form.tipo_parto|as_widget(attrs={'class':'form-control'}) }}
+    <div class="col-md-6">
+        <label for="id_tipo_parto" class="form-label">Tipo Parto</label>
+        {{ form.tipo_parto }}
     </div>
-    <div class="form-group">
-        <label>Tipo Parto Clasificado:</label>
-        {{ form.tipo_parto_clasificado|as_widget(attrs={'class':'form-control'}) }}
+    <div class="col-md-6">
+        <label for="id_tipo_parto_clasificado" class="form-label">Tipo Parto Clasificado</label>
+        {{ form.tipo_parto_clasificado }}
     </div>
-    <div class="form-check">
-        {{ form.parto_distocico }} <label class="form-check-label">Parto Distócico</label>
+    <div class="col-md-6">
+        <div class="form-check mt-4">
+            {{ form.parto_distocico }} <label class="form-check-label" for="id_parto_distocico">Parto Distócico</label>
+        </div>
+        <div class="form-check">
+            {{ form.parto_vacuum }} <label class="form-check-label" for="id_parto_vacuum">Parto Vacuum</label>
+        </div>
+        <div class="form-check">
+            {{ form.rem_a24 }} <label class="form-check-label" for="id_rem_a24">REM A24</label>
+        </div>
     </div>
-    <div class="form-check">
-        {{ form.parto_vacuum }} <label class="form-check-label">Parto Vacuum</label>
+    <div class="col-12">
+        <label for="id_complicaciones" class="form-label">Complicaciones</label>
+        {{ form.complicaciones }}
     </div>
-    <div class="form-check">
-        {{ form.rem_a24 }} <label class="form-check-label">REM A24</label>
+    <div class="col-12 d-flex gap-2 mt-3">
+        <button type="submit" class="btn btn-primary">Guardar Borrador</button>
+        {% if request.user.role == 'matrona' %}
+        <button type="submit" class="btn btn-success" id="btnRegistrar">Registrar</button>
+        {% else %}
+        <button type="submit" class="btn btn-secondary" id="btnRegistrar" disabled
+            title="Solo Matrona puede confirmar">Registrar</button>
+        {% endif %}
+        <a href="{% url 'ingreso_madre' %}" class="btn btn-secondary">Volver</a>
     </div>
-    <div class="form-group">
-        <label>Complicaciones:</label>
-        {{ form.complicaciones|as_widget(attrs={'class':'form-control'}) }}
-    </div>
-
-    <button type="submit" class="btn btn-primary">Guardar Borrador</button>
-
-    {% if request.user.role == 'matrona' %}
-    <button type="submit" class="btn btn-success" id="btnRegistrar">Registrar</button>
-    {% else %}
-    <button type="submit" class="btn btn-secondary" id="btnRegistrar" disabled
-        title="Solo Matrona puede confirmar">Registrar</button>
-    {% endif %}
-
-    <a href="{% url 'ingreso_madre' %}" class="btn btn-secondary">Volver</a>
 </form>
 {% endblock %}

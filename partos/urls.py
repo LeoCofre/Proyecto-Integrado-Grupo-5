@@ -19,8 +19,9 @@ urlpatterns = [
     path('parto/registrar/<int:pk>/', views.registrar_parto, name='registrar_parto'),
     
     # Recién Nacido
-    path('rn/ingreso/', views.ingreso_recién_nacido, name='ingreso_recién_nacido'),
-    path('rn/listado/', views.listado_recién_nacidos, name='listado_recién_nacidos'),
-    path('rn/<int:pk>/', views.detalle_recién_nacido, name='detalle_recién_nacido'),
+    path('rn/ingreso/', views.ingreso_rn, name='ingreso_rn'),
+    path('rn/listado/', views.listado_rn, name='listado_rn'),
+    path('rn/<int:pk>/', views.detalle_rn, name='detalle_rn'),
     path('rn/registrar/<int:pk>/', views.registrar_rn, name='registrar_rn'),
+    path('rn/editar/<int:pk>/', views.editar_rn, name='editar_rn'),
 ]

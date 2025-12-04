@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Partos - Sistema Neonatal{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Sistema de Partos</h1>
+    <p class="lead">Gestiona madres, partos y recién nacidos de forma integral.</p>
+
+    <!-- Auditoría -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">📝 Auditoría</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Revisa los registros de auditoría del sistema.</p>
+                    <div class="d-grid gap
+-2">
+                        <a href="{% url 'vista_auditoria' %}" class="btn btn-warning">Ver Registros</a>
+                    </div>
+
+                </div>
+            </div>

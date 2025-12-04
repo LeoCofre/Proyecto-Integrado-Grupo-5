@@ -1,23 +1,21 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+ 
 from django.contrib import messages
-from .models import Madre, Parto, RecienNacido
-from .forms import BuscarRutForm, MadreForm, PartoForm, RecienNacidoForm
-from django.views.decorators.http import require_http_methods
-from .role_required import role_required  # nuestro decorador
+from .models import Madre, Parto, RN
+from .forms import BuscarRutForm, MadreForm, PartoForm, RNForm
+ 
 
 # ----------------------------
 # Inicio / Dashboard simple
 # ----------------------------
 def inicio(request):
-    return render(request, 'partos/inicio.html')
+    return render(request, 'roles/panel_matrona.html')
 
 
 # ----------------------------
 # Paso 1: Buscar o ingresar madre
 # ----------------------------
-@role_required(allowed_roles=['matrona', 'enfermero'])
-@require_http_methods(["GET", "POST"])
+ 
 def ingreso_madre(request):
     if request.method == "POST":
         buscar_form = BuscarRutForm(request.POST)
@@ -40,8 +38,7 @@ def ingreso_madre(request):
 # ----------------------------
 # Guardar madre (borrador)
 # ----------------------------
-@role_required(allowed_roles=['matrona', 'enfermero'])
-@require_http_methods(["POST"])
+ 
 def guardar_madre(request):
     rut = request.session.get('rut_madre')
     if not rut:
@@ -53,10 +50,15 @@ def guardar_madre(request):
 
     if form.is_valid():
         madre_guardada = form.save(commit=False)
-        madre_guardada.confirmado = False
+        # Check which button was pressed
+        if 'btnRegistrar' in request.POST:
+            madre_guardada.confirmado = True
+            messages.success(request, "Madre registrada con éxito.")
+        else:
+            madre_guardada.confirmado = False
+            messages.success(request, "Datos de la madre guardados como borrador.")
         madre_guardada.save()
         request.session['madre_id'] = madre_guardada.id
-        messages.success(request, "Datos de la madre guardados como borrador.")
         return redirect('ingreso_parto')
     else:
         messages.error(request, "Corrija los errores antes de continuar.")
@@ -66,8 +68,7 @@ def guardar_madre(request):
 # ----------------------------
 # Paso 2: Ingreso Parto
 # ----------------------------
-@role_required(allowed_roles=['matrona', 'enfermero'])
-@require_http_methods(["GET", "POST"])
+ 
 def ingreso_parto(request):
     madre_id = request.session.get('madre_id')
     if not madre_id:
@@ -75,6 +76,10 @@ def ingreso_parto(request):
         return redirect('inicio')
 
     madre = get_object_or_404(Madre, id=madre_id)
+    if not madre.confirmado:
+        messages.warning(request, "Debe confirmar los datos de la madre antes de registrar el parto.")
+        return redirect('ingreso_madre')
+
     parto_existente = Parto.objects.filter(madre=madre).last()
 
     if request.method == "POST":
@@ -86,7 +91,7 @@ def ingreso_parto(request):
             parto.save()
             request.session['parto_id'] = parto.id
             messages.success(request, "Parto guardado como borrador.")
-            return redirect('ingreso_recién_nacido')
+            return redirect('ingreso_rn')
     else:
         form = PartoForm(instance=parto_existente)
 
@@ -96,9 +101,9 @@ def ingreso_parto(request):
 # ----------------------------
 # Paso 3: Ingreso Recién Nacido
 # ----------------------------
-@role_required(allowed_roles=['matrona', 'enfermero'])
-@require_http_methods(["GET", "POST"])
-def ingreso_recién_nacido(request):
+ 
+
+def ingreso_rn(request):
     madre_id = request.session.get('madre_id')
     parto_id = request.session.get('parto_id')
     if not madre_id or not parto_id:
@@ -107,30 +112,47 @@ def ingreso_recién_nacido(request):
 
     madre = get_object_or_404(Madre, id=madre_id)
     parto = get_object_or_404(Parto, id=parto_id)
+    if not parto.confirmado:
+        messages.warning(request, "Debe confirmar el parto antes de registrar el RN.")
+        return redirect('ingreso_parto')
 
-    rn_existente = RecienNacido.objects.filter(madre=madre, parto_asociado=parto).last()
+    rn_existente = RN.objects.filter(madre=madre, parto_asociado=parto).last()
 
     if request.method == "POST":
-        form = RecienNacidoForm(request.POST, instance=rn_existente)
+        form = RNForm(request.POST, instance=rn_existente)
         if form.is_valid():
             rn = form.save(commit=False)
             rn.madre = madre
             rn.parto_asociado = parto
             rn.confirmado = False
             rn.save()
-            messages.success(request, "Recién nacido guardado como borrador.")
-            return redirect('listado_recién_nacidos')
+            messages.success(request, "RN guardado como borrador.")
+            return redirect('listado_rn')
     else:
-        form = RecienNacidoForm(instance=rn_existente)
+        form = RNForm(instance=rn_existente)
 
     return render(request, 'partos/form_rn.html', {'form': form, 'madre': madre, 'parto': parto, 'rn': rn_existente})
+
+# ----------------------------
+# Edición de Recién Nacido
+# ----------------------------
+def editar_rn(request, pk):
+    rn = get_object_or_404(RN, pk=pk)
+    if request.method == "POST":
+        form = RNForm(request.POST, instance=rn)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Datos del RN actualizados correctamente.")
+            return redirect('listado_rn')
+    else:
+        form = RNForm(instance=rn)
+    return render(request, 'partos/form_rn.html', {'form': form, 'madre': rn.madre, 'parto': rn.parto_asociado, 'rn': rn})
 
 
 # ----------------------------
 # Registrar (confirmar) registros - SOLO MATRONA
 # ----------------------------
-@role_required(allowed_roles=['matrona'])
-@require_http_methods(["POST"])
+ 
 def registrar_madre(request, pk):
     madre = get_object_or_404(Madre, pk=pk)
     madre.confirmado = True
@@ -139,8 +161,7 @@ def registrar_madre(request, pk):
     return redirect('listado_madres')
 
 
-@role_required(allowed_roles=['matrona'])
-@require_http_methods(["POST"])
+ 
 def registrar_parto(request, pk):
     parto = get_object_or_404(Parto, pk=pk)
     parto.confirmado = True
@@ -149,53 +170,55 @@ def registrar_parto(request, pk):
     return redirect('listado_partos')
 
 
-@role_required(allowed_roles=['matrona'])
-@require_http_methods(["POST"])
+ 
 def registrar_rn(request, pk):
-    rn = get_object_or_404(RecienNacido, pk=pk)
+    rn = get_object_or_404(RN, pk=pk)
     rn.confirmado = True
     rn.save()
-    messages.success(request, "Recién nacido registrado con éxito.")
-    return redirect('listado_recién_nacidos')
+    messages.success(request, "RN registrado con éxito.")
+    return redirect('listado_rn')
 
 
 # ----------------------------
 # Listados
 # ----------------------------
-@role_required(allowed_roles=['matrona', 'enfermero'])
+ 
 def listado_madres(request):
     madres = Madre.objects.all().order_by('-fecha_nacimiento')
     return render(request, 'partos/listado_madre.html', {'madres': madres})
 
 
-@role_required(allowed_roles=['matrona', 'enfermero'])
+ 
 def listado_partos(request):
-    partos = Parto.objects.all().order_by('-fecha_hora')
+    if request.GET.get('borradores'):
+        partos = Parto.objects.filter(confirmado=False).order_by('-fecha_hora')
+    else:
+        partos = Parto.objects.all().order_by('-fecha_hora')
     return render(request, 'partos/listado_parto.html', {'partos': partos})
 
 
-@role_required(allowed_roles=['matrona', 'enfermero'])
-def listado_recién_nacidos(request):
-    rns = RecienNacido.objects.all().order_by('-fecha_nacimiento')
+ 
+def listado_rn(request):
+    rns = RN.objects.all().order_by('-fecha_nacimiento')
     return render(request, 'partos/listado_rn.html', {'rns': rns})
 
 
 # ----------------------------
 # Detalle
 # ----------------------------
-@role_required(allowed_roles=['matrona', 'enfermero'])
+ 
 def detalle_madre(request, pk):
     madre = get_object_or_404(Madre, pk=pk)
     return render(request, 'partos/detalle_madre.html', {'madre': madre})
 
 
-@role_required(allowed_roles=['matrona', 'enfermero'])
+ 
 def detalle_parto(request, pk):
     parto = get_object_or_404(Parto, pk=pk)
     return render(request, 'partos/detalle_parto.html', {'parto': parto})
 
 
-@role_required(allowed_roles=['matrona', 'enfermero'])
-def detalle_recién_nacido(request, pk):
-    rn = get_object_or_404(RecienNacido, pk=pk)
+ 
+def detalle_rn(request, pk):
+    rn = get_object_or_404(RN, pk=pk)
     return render(request, 'partos/detalle_rn.html', {'rn': rn})

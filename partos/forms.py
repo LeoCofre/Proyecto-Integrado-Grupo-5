@@ -1,5 +1,5 @@
 from django import forms
-from .models import Madre, Parto, RecienNacido
+from .models import Madre, Parto, RN
 
 # ------------------------------
 # Formulario para buscar Rut
@@ -52,9 +52,9 @@ class PartoForm(forms.ModelForm):
 # ------------------------------
 # Formulario Recién Nacido
 # ------------------------------
-class RecienNacidoForm(forms.ModelForm):
+class RNForm(forms.ModelForm):
     class Meta:
-        model = RecienNacido
+        model = RN
         exclude = ['madre', 'parto_asociado', 'confirmado']
         widgets = {
             'fecha_nacimiento': forms.DateInput(attrs={'type':'date', 'class':'form-control'}),
@@ -70,7 +70,7 @@ class RecienNacidoForm(forms.ModelForm):
             'cc': forms.NumberInput(attrs={'class':'form-control', 'step':'0.1'}),
             'semanas_gestacion': forms.NumberInput(attrs={'class':'form-control'}),
             'dias_gestacion': forms.NumberInput(attrs={'class':'form-control'}),
-            'sexo': forms.Select(choices=RecienNacido.SEXO_CHOICES, attrs={'class':'form-control'}),
+            'sexo': forms.Select(choices=RN.SEXO_CHOICES, attrs={'class':'form-control'}),
             'apego': forms.CheckboxInput(attrs={'class':'form-check-input'}),
             'lactancia_antes_60': forms.CheckboxInput(attrs={'class':'form-check-input'}),
             'profilaxis_ocular': forms.CheckboxInput(attrs={'class':'form-check-input'}),
