@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'partos',
     'reportes',
     'auditoria',
-    'usuarios',
+    'roles',
 ]
 
 MIDDLEWARE = [
