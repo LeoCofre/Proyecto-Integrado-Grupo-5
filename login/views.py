@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password, check_password
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import CrearUsuarioForm, LoginForm # Asegúrate de importar tus forms
 from .models import Usuario
@@ -176,6 +175,9 @@ def logout_view(request):
     messages.info(request, "Has cerrado sesión correctamente.")
     return redirect('login')
 
-@login_required
 def panel_matrona(request):
+    # Check for custom session-based authentication
+    if 'usuario_id' not in request.session:
+        messages.warning(request, "Debes iniciar sesión primero.")
+        return redirect('login')
     return render(request, 'login/panel_matrona.html')
