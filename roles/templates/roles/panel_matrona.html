@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Partos - Sistema Neonatal{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Sistema de Partos</h1>
+    <p class="lead">Gestiona madres, partos y recién nacidos de forma integral.</p>
+
+    <!-- Tres columnas principales -->
+    <div class="row g-4 mb-5">
+        <!-- Madres -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">👩 Madres</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Registra y busca información de las madres embarazadas.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'ingreso_madre' %}" class="btn btn-primary">Ingresar Madre</a>
+                        <a href="{% url 'listado_madres' %}" class="btn btn-outline-primary">Ver Listado</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Partos -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">🏥 Partos</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Registra y revisa detalles de cada parto realizado.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'ingreso_parto' %}" class="btn btn-success">Ingresar Parto</a>
+                        <a href="{% url 'listado_partos' %}" class="btn btn-outline-success">Ver Listado</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recién Nacidos -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">👶 Recién Nacidos</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Registra y gestiona datos de los recién nacidos.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'ingreso_recién_nacido' %}" class="btn btn-info">Ingresar RN</a>
+                        <a href="{% url 'listado_recién_nacidos' %}" class="btn btn-outline-info">Ver Listado</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie de página con info -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <footer class="text-muted border-top pt-3">
+                <p><small>Sistema Neonatal - Gestión de Partos y Recién Nacidos</small></p>
+                <a href="{% url 'panel_matrona' %}" class="btn btn-secondary btn-sm">← Volver al Panel</a>
+            </footer>
+        </div>
+    </div>
+</div>
+{% endblock %}

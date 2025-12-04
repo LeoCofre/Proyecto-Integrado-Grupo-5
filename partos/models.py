@@ -10,6 +10,7 @@ class Madre(models.Model):
     atenciones_clinicas = models.TextField(blank=True, null=True)
     acompañante = models.CharField(max_length=255, blank=True, null=True)
     confirmado = models.BooleanField(default=False)  # Para control de Matrona
+    objects = models.Manager()
 
     def __str__(self):
         return f"{self.nombre} ({self.rut})"
@@ -31,19 +32,20 @@ class Parto(models.Model):
     parto_vacuum = models.BooleanField(default=False)
     rem_a24 = models.BooleanField(default=False)
     confirmado = models.BooleanField(default=False)
+    objects = models.Manager()
 
     def __str__(self):
-        return f"Parto {self.id} - {self.madre.nombre}"
+        return f"Parto {self.pk} - {self.madre.nombre if hasattr(self.madre, 'nombre') else self.madre}"
 
 
-class RecienNacido(models.Model):
+class RN(models.Model):
     SEXO_CHOICES = [
         ('M', 'Masculino'),
         ('F', 'Femenino'),
         ('I', 'Indeterminado'),
     ]
-    madre = models.ForeignKey(Madre, on_delete=models.CASCADE, related_name='recién_nacidos')
-    parto_asociado = models.ForeignKey(Parto, on_delete=models.CASCADE, related_name='recién_nacidos')
+    madre = models.ForeignKey(Madre, on_delete=models.CASCADE, related_name='rns')
+    parto_asociado = models.ForeignKey(Parto, on_delete=models.CASCADE, related_name='rns')
     fecha_nacimiento = models.DateField()
     hora_nacimiento = models.TimeField()
     apellido_paterno_rn = models.CharField(max_length=255)
@@ -71,6 +73,7 @@ class RecienNacido(models.Model):
     reanimacion_avanzada = models.BooleanField(default=False)
     ehi_grado_ii_iii = models.BooleanField(default=False)
     confirmado = models.BooleanField(default=False)  # Solo Matrona puede confirmar
+    objects = models.Manager()
 
     def __str__(self):
-        return f"{self.apellido_paterno_rn} - {self.madre.nombre}"
+        return f"{self.apellido_paterno_rn} - {self.madre.nombre if hasattr(self.madre, 'nombre') else self.madre}"

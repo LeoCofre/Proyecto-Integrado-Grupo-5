@@ -2,10 +2,10 @@ from functools import wraps
 from django.shortcuts import redirect
 from django.contrib import messages
 
-def role_required(allowed_roles=['matrona', 'enfermero']):
+def role_required(allowed_roles=['matrona', 'enfermero', 'some', 'supervisor']):
     """
     Decorador para restringir acceso según rol.
-    allowed_roles = lista de roles permitidos, ej: ['matrona', 'enfermero']
+    allowed_roles = lista de roles permitidos, ej: ['matrona', 'enfermero', 'some', 'supervisor']
     """
     def decorator(view_func):
         @wraps(view_func)

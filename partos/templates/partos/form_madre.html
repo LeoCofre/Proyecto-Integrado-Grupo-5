@@ -1,62 +1,54 @@
-{% extends "partos.html" %}
-
+{% extends 'partos/partos.html' %}
 {% block header %}Ingreso / Edición de Madre{% endblock %}
-
 {% block body %}
-<h2>Registrar Madre</h2>
-
-<form method="post">
+<form method="post" class="row g-3">
     {% csrf_token %}
-
-    <div class="form-group">
-        <label>Nombre:</label>
-        {{ form.nombre|as_widget(attrs={'class':'form-control'}) }}
+    <div class="col-md-6">
+        <label for="id_nombre" class="form-label">Nombre</label>
+        {{ form.nombre }}
     </div>
-    <div class="form-group">
-        <label>RUT:</label>
-        {{ form.rut|as_widget(attrs={'class':'form-control'}) }}
+    <div class="col-md-6">
+        <label for="id_rut" class="form-label">RUT</label>
+        {{ form.rut }}
     </div>
-    <div class="form-group">
-        <label>Fecha de Nacimiento:</label>
-        {{ form.fecha_nacimiento|as_widget(attrs={'class':'form-control','type':'date'}) }}
+    <div class="col-md-6">
+        <label for="id_fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+        {{ form.fecha_nacimiento }}
     </div>
-    <div class="form-group">
-        <label>Dirección:</label>
-        {{ form.direccion|as_widget(attrs={'class':'form-control'}) }}
+    <div class="col-md-6">
+        <label for="id_direccion" class="form-label">Dirección</label>
+        {{ form.direccion }}
     </div>
-    <div class="form-group">
-        <label>Teléfono:</label>
-        {{ form.telefono|as_widget(attrs={'class':'form-control'}) }}
+    <div class="col-md-6">
+        <label for="id_telefono" class="form-label">Teléfono</label>
+        {{ form.telefono }}
     </div>
-    <div class="form-group">
-        <label>Antecedentes Obstétricos:</label>
-        {{ form.antecedentes_obstetricos|as_widget(attrs={'class':'form-control'}) }}
+    <div class="col-12">
+        <label for="id_antecedentes_obstetricos" class="form-label">Antecedentes Obstétricos</label>
+        {{ form.antecedentes_obstetricos }}
     </div>
-    <div class="form-group">
-        <label>Atenciones Clínicas:</label>
-        {{ form.atenciones_clinicas|as_widget(attrs={'class':'form-control'}) }}
+    <div class="col-12">
+        <label for="id_atenciones_clinicas" class="form-label">Atenciones Clínicas</label>
+        {{ form.atenciones_clinicas }}
     </div>
-    <div class="form-group">
-        <label>Acompañante:</label>
-        {{ form.acompañante|as_widget(attrs={'class':'form-control'}) }}
+    <div class="col-md-6">
+        <label for="id_acompañante" class="form-label">Acompañante</label>
+        {{ form.acompañante }}
     </div>
-
-    {% if madre %}
-    <button type="button" id="editarBtn" class="btn btn-warning mb-2">Editar</button>
-    {% endif %}
-
-    <button type="submit" class="btn btn-primary">Guardar Borrador</button>
-
-    {% if request.user.role == 'matrona' %}
-    <button type="submit" class="btn btn-success" id="btnRegistrar">Registrar</button>
-    {% else %}
-    <button type="submit" class="btn btn-secondary" id="btnRegistrar" disabled
-        title="Solo Matrona puede confirmar">Registrar</button>
-    {% endif %}
-
-    <a href="{% url 'inicio' %}" class="btn btn-secondary">Volver al Inicio</a>
+    <div class="col-12 d-flex gap-2 mt-3">
+        {% if madre %}
+        <button type="button" id="editarBtn" class="btn btn-warning">Editar</button>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Guardar Borrador</button>
+        {% if request.user.role == 'matrona' %}
+        <button type="submit" class="btn btn-success" id="btnRegistrar">Registrar</button>
+        {% else %}
+        <button type="submit" class="btn btn-secondary" id="btnRegistrar" disabled
+            title="Solo Matrona puede confirmar">Registrar</button>
+        {% endif %}
+        <a href="{% url 'inicio' %}" class="btn btn-secondary">Volver al Inicio</a>
+    </div>
 </form>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const editarBtn = document.getElementById("editarBtn");

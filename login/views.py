@@ -114,6 +114,8 @@ def crear_usuario_view(request):
                     
                     if rol_actual == 'Matrona':
                         return redirect('panel_matrona') # Asegúrate de tener esta URL name
+                    elif rol_actual == 'Enfermero':
+                        return redirect('panel_matrona') # Enfermero va al mismo panel que Matrona
                     elif rol_actual == 'Jefe de Área' or rol_actual == 'Supervisor':
                         return redirect('panel_supervisor')
                     elif rol_actual == 'Administrador TI':
@@ -146,20 +148,18 @@ def login_view(request):
 
                     # Redirigir según rol
                     rol_actual = request.session['rol']
-                    if rol_actual == 'Matrona':
-                        return redirect('panel_matrona')
-                    elif rol_actual in ['Jefe de Área', 'Supervisor']:
-                        return redirect('panel_supervisor')
-                    elif rol_actual == 'Administrador TI':
+                    if rol_actual == 'Administrador TI':
                         return redirect('crear_usuario')
+                    elif rol_actual in ['Matrona', 'Enfermero']:
+                        return redirect('panel_matrona')
+                    elif rol_actual == 'Supervisor':
+                        return redirect('panel_supervisor')
                     elif rol_actual == 'Auditor Interno':
-                        return redirect('panel_auditor')
-                    elif rol_actual == 'Enfermero':
-                        return redirect('panel_enfermero')
+                        return redirect('panel_auditoria')
                     elif rol_actual == 'SOME':
                         return redirect('panel_some')
                     else:
-                        return redirect('home')
+                        return redirect('panel_matrona')
                 else:
                     messages.error(request, "RUT o contraseña incorrectos.")
             except Usuario.DoesNotExist:

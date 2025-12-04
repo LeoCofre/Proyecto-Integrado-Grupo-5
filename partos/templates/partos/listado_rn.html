@@ -1,4 +1,4 @@
-{% extends "partos.html" %}
+{% extends "partos/partos.html" %}
 
 {% block header %}Listado de Recién Nacidos{% endblock %}
 
@@ -82,5 +82,5 @@
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'crear_rn' %}" class="btn btn-success mt-3">Agregar Recién Nacido</a>
+<!-- Si existe una vista para crear RN, actualiza el nombre aquí. Si no, elimina este botón. -->
 {% endblock %}
