@@ -33,14 +33,16 @@
             <td>{{ madre.antecedentes_obstetricos }}</td>
             <td>{{ madre.atenciones_clinicas }}</td>
             <td>{{ madre.acompañante }}</td>
-            <td>{{ madre.confirmado }}</td>
+            <td>{{ madre.confirmado|yesno:"Sí,No" }}</td>
             <td>
-                <a href="{% url 'editar_madre' madre.id %}" class="btn btn-sm btn-warning">Editar</a>
                 <a href="{% url 'detalle_madre' madre.id %}" class="btn btn-sm btn-info">Ver</a>
+                {% if not madre.confirmado %}
+                <a href="{% url 'editar_madre' madre.id %}" class="btn btn-sm btn-warning">Editar</a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'crear_madre' %}" class="btn btn-success mt-3">Agregar Madre</a>
+<a href="{% url 'ingreso_madre' %}" class="btn btn-success mt-3">Agregar Madre</a>
 {% endblock %}

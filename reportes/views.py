@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.shortcuts import render 
 from django.db.models import Count 
-from partos.models import Madre, Parto, RecienNacido 
+from partos.models import Madre, Parto, RN 
 from.forms import FiltroReporteForm 
 from django.http import HttpResponse 
 import csv 
@@ -13,10 +13,10 @@ from openpyxl import Workbook
 def dashboard(request):
     total_madres = Madre.objects.count()
     total_partos = Parto.objects.count()
-    total_rn = RecienNacido.objects.count()
+    total_rn = RN.objects.count()
 
-        # Ejemplo de datos para gráfico: RN por sexo    
-    rn_por_sexo = RecienNacido.objects.values('sexo').annotate(total=Count('id'))
+    # Ejemplo de datos para gráfico: RN por sexo    
+    rn_por_sexo = RN.objects.values('sexo').annotate(total=Count('id'))
 
     context = {
         'total_madres': total_madres,
@@ -31,7 +31,7 @@ def dashboard(request):
     # Reporte con filtros 
 def reportes_graficos(request):
     form = FiltroReporteForm(request.GET or None)
-    rns = RecienNacido.objects.all()
+    rns = RN.objects.all()
 
     if form.is_valid():
         madre = form.cleaned_data.get('madre')
@@ -62,7 +62,7 @@ def reportes_graficos(request):
     return render(request, 'reportes/reportes_graficos.html', context)
 # Exportar Excel 
 def exportar_excel(request):
-    rns = RecienNacido.objects.all()
+    rns = RN.objects.all()
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename=Reporte_RN_{datetime.date.today()}.xlsx'
 

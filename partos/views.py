@@ -9,7 +9,7 @@ from .forms import BuscarRutForm, MadreForm, PartoForm, RNForm
 # Inicio / Dashboard simple
 # ----------------------------
 def inicio(request):
-    return render(request, 'partos/partos.html')
+    return render(request, 'roles/panel_matrona.html')
 
 
 # ----------------------------
@@ -190,7 +190,10 @@ def listado_madres(request):
 
  
 def listado_partos(request):
-    partos = Parto.objects.all().order_by('-fecha_hora')
+    if request.GET.get('borradores'):
+        partos = Parto.objects.filter(confirmado=False).order_by('-fecha_hora')
+    else:
+        partos = Parto.objects.all().order_by('-fecha_hora')
     return render(request, 'partos/listado_parto.html', {'partos': partos})
 
 

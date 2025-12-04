@@ -180,4 +180,22 @@ def panel_matrona(request):
     if 'usuario_id' not in request.session:
         messages.warning(request, "Debes iniciar sesión primero.")
         return redirect('login')
-    return render(request, 'login/panel_matrona.html')
+    return render(request, 'roles/panel_matrona.html')
+
+def panel_supervisor(request):
+    if 'usuario_id' not in request.session:
+        messages.warning(request, "Debes iniciar sesión primero.")
+        return redirect('login')
+    return render(request, 'roles/panel_supervisor.html')
+
+def panel_auditoria(request):
+    if 'usuario_id' not in request.session:
+        messages.warning(request, "Debes iniciar sesión primero.")
+        return redirect('login')
+    return render(request, 'roles/panel_auditoria.html')
+
+def panel_some(request):
+    if 'usuario_id' not in request.session:
+        messages.warning(request, "Debes iniciar sesión primero.")
+        return redirect('login')
+    return render(request, 'roles/panel_some.html')

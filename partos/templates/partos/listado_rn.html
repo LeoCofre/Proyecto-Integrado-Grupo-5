@@ -73,14 +73,15 @@
             <td>{{ rn.reanimacion_basica }}</td>
             <td>{{ rn.reanimacion_avanzada }}</td>
             <td>{{ rn.ehi_grado_ii_iii }}</td>
-            <td>{{ rn.confirmado }}</td>
+            <td>{{ rn.confirmado|yesno:"Sí,No" }}</td>
             <td>
-                <a href="{% url 'editar_rn' rn.id %}" class="btn btn-sm btn-warning">Editar</a>
                 <a href="{% url 'detalle_rn' rn.id %}" class="btn btn-sm btn-info">Ver</a>
+                {% if not rn.confirmado %}
+                <a href="{% url 'editar_rn' rn.id %}" class="btn btn-sm btn-warning">Editar</a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<!-- Si existe una vista para crear RN, actualiza el nombre aquí. Si no, elimina este botón. -->
 {% endblock %}
