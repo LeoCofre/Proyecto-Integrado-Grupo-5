@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 import datetime
 
 # ==============================================================================
@@ -72,64 +74,34 @@ class Rol(models.Model):
 # ==============================================================================
 # 2. MODELO DE USUARIO (TU VERSIÓN PERSONALIZADA)
 # ==============================================================================
-class Usuario(models.Model):
-    
-    # Identificación
-    nombre = models.CharField(
-        max_length=100, 
-        verbose_name="Nombre Completo del Trabajador"
-    )
+from django.utils.translation import gettext_lazy as _
+
+class Usuario(AbstractUser):
     rut = models.CharField(
         max_length=12, 
         unique=True, 
         verbose_name="RUT (Identificador Único)"
     )
-
-
-    
-    # Autenticación (Tu lógica manual)
-    password = models.CharField(
-        max_length=128, 
-        verbose_name="Contraseña (Hasheada Manualmente)"
-    ) 
-    
-    # Relación con Rol
+    nombre = models.CharField(
+        max_length=100, 
+        verbose_name="Nombre Completo del Trabajador"
+    )
     rol = models.ForeignKey(
         Rol, 
-        on_delete=models.PROTECT, 
+        on_delete=models.SET_NULL, 
+        null=True, blank=True, 
         verbose_name="Rol Asignado"
     )
-    
-    # --- SEGURIDAD Y BLOQUEO (HU-01) ---
-    is_active = models.BooleanField(
-        default=True,
-        verbose_name="Cuenta Activa/Desbloqueada"
+    # Sobrescribe username para que no sea requerido ni visible
+    username = models.CharField(
+        max_length=150,
+        unique=False,
+        blank=True,
+        null=True,
+        editable=False,  # Oculta el campo en el admin y formularios
+        verbose_name="(Oculto)"
     )
-    intentos_fallidos = models.IntegerField(
-        default=0,
-        verbose_name="Intentos fallidos de inicio de sesión"
-    )
-    
-    # --- RECUPERACIÓN ---
-    # Aunque no usen tokens por correo, estos campos pueden servir 
-    # para auditoría interna del reseteo manual.
-    token_recuperacion = models.CharField(
-        max_length=64, 
-        blank=True, 
-        null=True, 
-        verbose_name="Token de Recuperación (Opcional)"
-    )
-    token_expira = models.DateTimeField(
-        blank=True, 
-        null=True, 
-        verbose_name="Expiración del Token"
-    )
-    
-    class Meta:
-        verbose_name = "Usuario del Sistema"
-        verbose_name_plural = "Usuarios del Sistema"
-        
+    USERNAME_FIELD = 'rut'
+    REQUIRED_FIELDS = []  # Solo rut y password serán requeridos
     def __str__(self):
-        return f"{self.nombre} ({self.rol.nombre})"
-
-# Create your models here.
+        return f"{self.nombre} ({self.rut})"

@@ -150,3 +150,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom login URL for session-based authentication
 LOGIN_URL = 'login'
+
+# Custom User Model
+AUTH_USER_MODEL = 'login.Usuario'

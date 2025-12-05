@@ -14,8 +14,6 @@ class Madre(models.Model):
 
     def __str__(self):
         return f"{self.nombre} ({self.rut})"
-
-
 class Parto(models.Model):
     TIPO_PARTO_CHOICES = [
         ('vaginal', 'Vaginal'),
@@ -23,7 +21,7 @@ class Parto(models.Model):
         ('instrumental', 'Instrumental'),
         ('extrahospitalario', 'Extrahospitalario'),
     ]
-    madre = models.ForeignKey(Madre, on_delete=models.CASCADE, related_name='partos')
+    madre = models.ForeignKey('Madre', on_delete=models.CASCADE, related_name='partos')
     fecha_hora = models.DateTimeField()
     tipo_parto = models.CharField(max_length=20, choices=TIPO_PARTO_CHOICES)
     tipo_parto_clasificado = models.CharField(max_length=20, blank=True, null=True)
@@ -44,7 +42,7 @@ class RN(models.Model):
         ('F', 'Femenino'),
         ('I', 'Indeterminado'),
     ]
-    madre = models.ForeignKey(Madre, on_delete=models.CASCADE, related_name='rns')
+    madre = models.ForeignKey('Madre', on_delete=models.CASCADE, related_name='rns')
     parto_asociado = models.ForeignKey(Parto, on_delete=models.CASCADE, related_name='rns')
     fecha_nacimiento = models.DateField()
     hora_nacimiento = models.TimeField()

@@ -7,6 +7,7 @@
         parto.fecha_hora }}</span></h5>
 <form method="post" class="row g-3">
     {% csrf_token %}
+    <!-- Los datos de madre y parto solo se muestran, no se editan -->
     <div class="col-md-6">
         <label for="id_apellido_paterno_rn" class="form-label">Apellido Paterno RN</label>
         {{ form.apellido_paterno_rn }}
@@ -94,9 +95,9 @@
         </div>
     </div>
     <div class="col-12 d-flex gap-2 mt-3">
-        <button type="submit" class="btn btn-secondary">Volver</button>
+        <a href="{% url 'panel_matrona' %}" class="btn btn-secondary">Volver al Panel</a>
         <button type="submit" class="btn btn-primary">Guardar Borrador</button>
-        {% if request.user.role == 'matrona' %}
+        {% if request.user.rol and request.user.rol.nombre == 'Matrona' %}
         <button type="submit" class="btn btn-success" id="btnRegistrar">Registrar</button>
         {% else %}
         <button type="submit" class="btn btn-secondary" id="btnRegistrar" disabled

@@ -1,6 +1,7 @@
 {% extends 'partos/partos.html' %}
 {% block header %}Ingreso / Edición de Madre{% endblock %}
 {% block body %}
+{% if request.user.rol and request.user.rol.nombre == 'SOME' %}
 <form method="post" class="row g-3">
     {% csrf_token %}
     <div class="col-md-6">
@@ -40,12 +41,7 @@
         <button type="button" id="editarBtn" class="btn btn-warning">Editar</button>
         {% endif %}
         <button type="submit" class="btn btn-primary">Guardar Borrador</button>
-        {% if request.user.role == 'matrona' %}
         <button type="submit" class="btn btn-success" id="btnRegistrar">Registrar</button>
-        {% else %}
-        <button type="submit" class="btn btn-secondary" id="btnRegistrar" disabled
-            title="Solo Matrona puede confirmar">Registrar</button>
-        {% endif %}
         <a href="{% url 'inicio' %}" class="btn btn-secondary">Volver al Inicio</a>
     </div>
 </form>
@@ -61,4 +57,8 @@
         }
     });
 </script>
+{% else %}
+<div class="alert alert-danger mt-4">Solo el usuario SOME puede registrar o editar datos de madre.</div>
+<a href="{% url 'inicio' %}" class="btn btn-secondary mt-3">Volver al Inicio</a>
+{% endif %}
 {% endblock %}

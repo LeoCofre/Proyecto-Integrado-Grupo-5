@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Buscar Madre por RUT{% endblock %}
+{% block title %}Buscar Madre para Ingreso de Parto{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
@@ -8,10 +8,11 @@
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Buscar Madre por RUT</h4>
+                    <h4 class="mb-0">Buscar Madre Confirmada</h4>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">Ingresa el RUT de la madre para buscar sus datos o crear uno nuevo.</p>
+                    <p class="text-muted">Ingresa el RUT de la madre (ya registrada y confirmada por SOME) para ingresar
+                        un parto.</p>
 
                     <!-- Mensajes de éxito/error -->
                     {% if messages %}
@@ -26,7 +27,6 @@
                     <!-- Formulario de búsqueda -->
                     <form method="post" novalidate>
                         {% csrf_token %}
-
                         <div class="mb-3">
                             <label for="{{ form.rut.id_for_label }}" class="form-label">{{ form.rut.label }}</label>
                             {{ form.rut }}
@@ -37,7 +37,6 @@
                             {% endif %}
                             <small class="form-text text-muted">Formato: XX.XXX.XXX-X (ej: 12.345.678-9)</small>
                         </div>
-
                         <button type="submit" class="btn btn-primary w-100">Buscar</button>
                     </form>
 
@@ -52,7 +51,8 @@
 
             <!-- Información adicional -->
             <div class="alert alert-info mt-3" role="alert">
-                <strong>💡 Tip:</strong> Si el RUT no existe en el sistema, se te permitirá crear un nuevo registro.
+                <strong>💡 Importante:</strong> Solo puedes ingresar partos para madres ya confirmadas por SOME. Si el
+                RUT no existe, solicita el registro a SOME.
             </div>
         </div>
     </div>
