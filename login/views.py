@@ -39,9 +39,9 @@ def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            rut = form.cleaned_data['username']
+            rut = form.cleaned_data['rut']
             password = form.cleaned_data['password']
-            user = authenticate(request, username=rut, password=password)
+            user = authenticate(request, rut=rut, password=password)
             if user is not None:
                 if user.is_active:
                     login(request, user)

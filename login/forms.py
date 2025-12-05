@@ -41,7 +41,7 @@ class CrearUsuarioForm(forms.ModelForm):
 
 # Formulario simple para el Login (HU-01)
 class LoginForm(forms.Form):
-    username = forms.CharField(
+    rut = forms.CharField(
         label="RUT",
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su RUT'})
     )
